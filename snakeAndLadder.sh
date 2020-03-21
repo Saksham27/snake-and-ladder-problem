@@ -9,12 +9,19 @@ LADDER=2
 WIN_POSITION=100
 INFINITE_LOOP=1
 
-# varibales
-diceRolled=0
-arrLength=0
+# varibales for player 1
+diceRolled1=0
+arrLength1=0
+currPosition1=0
+
+# variables for player 2
+diceRolled2=0
+arrLength2=0
+currPosition2=0
 
 # declare array to store all the positions after every dice roll
-declare -a playerPosition
+declare -a playerPosition1
+declare -a playerPosition2
 
 # function to roll the dice
 function diceRoll() {
@@ -22,6 +29,8 @@ function diceRoll() {
 }
 
 # fucntion to decide next move. No play , snake or ladder
+# param1 : dice roll fucntion
+# param2 : current position of player
 function nextMove() {
 	temp=$((RANDOM%3))
 	if [ $temp -eq $NO_MOVE ]
@@ -40,11 +49,9 @@ function nextMove() {
 	fi
 }
 
-# starting the game
-currPosition=$START_POSITION
-while [ $INFINITE_LOOP ]
-do 
-	tempPosition=$( nextMove $( diceRoll ) $currPosition )
+# fucntion to get next position
+function getPosition() {
+	tempPosition=$( nextMove $( diceRoll ) $1 )
 	(( diceRolled++ ))
 	if [ $tempPosition -gt $WIN_POSITION ] # setting player position
 	then
@@ -58,11 +65,33 @@ do
 		currPosition=$START_POSITION
 	fi
 
-	playerPosition[$arrLength]=$currPosition # storing player position after evry die roll
-	((arrLength++))
+	echo $currPosition
 
-	if [ $currPosition -eq $WIN_POSITION ]
+}
+
+# starting the game
+currPosition1=$START_POSITION # player 1
+currPosition2=$START_POSITION # player 2
+
+while [ $INFINITE_LOOP ]
+do 
+	currPosition1=$( getPosition $currPosition1 )
+	currPosition2=$( getPosition $currPosition2 )
+
+	playerPosition1[$arrLength1]=$currPosition1 # storing player 1 position after evry die roll
+	((arrLength1++))
+	playerPosition2[$arrLength2]=$currPosition2 # storing player 2  position after evry die roll
+	((arrLength2++))
+
+	if [ $currPosition1 -eq $WIN_POSITION ]
 	then
+		winner="player 1"
 		break;
 	fi
+	if [ $currPosition2 -eq $WIN_POSITION ]
+	then
+		winner="player 2"
+		break;
+	fi
+
 done
