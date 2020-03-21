@@ -7,7 +7,7 @@ NO_MOVE=0
 SNAKE=1
 LADDER=2
 WIN_POSITION=100
-
+INFINITE_LOOP=1
 # function to roll the dice
 function diceRoll() {
 	echo $((RANDOM%6+1))
@@ -18,27 +18,39 @@ function nextMove() {
 	temp=$((RANDOM%3))
 	if [ $temp -eq $NO_MOVE ]
 	then
-		echo $currPosition
+		echo $2
 	fi
 
 	if [ $temp -eq $SNAKE ] 
 	then
-		echo $(( $currPosition-$1 ))
+		echo $(( $2-$1 ))
 	fi
 
 	if [ $temp -eq $LADDER ]
 	then
-		echo $(( $currPosition+$1 ))
+		echo $(( $2+$1 ))
 	fi
 }
 
 # starting the game
 currPosition=$START_POSITION
-while [ $currPosition -lt $WIN_POSITION ]
+while [ $INFINITE_LOOP ]
 do 
-	currPosition=$( nextMove $( diceRoll ) )
+	tempPosition=$( nextMove $( diceRoll ) $currPosition )
+	if [ $tempPosition -gt $WIN_POSITION ]
+	then
+		currPosition=$currPosition
+	else
+		currPosition=$tempPosition
+	fi
+
 	if [ $currPosition -lt $START_POSITION ]
 	then
 		currPosition=$START_POSITION
+	fi
+
+	if [ $currPosition -eq $WIN_POSITION ]
+	then
+		break;
 	fi
 done
