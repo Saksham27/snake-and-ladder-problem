@@ -6,6 +6,7 @@ START_POSITION=0
 NO_MOVE=0
 SNAKE=1
 LADDER=2
+WIN_POSITION=100
 
 # function to roll the dice
 function diceRoll() {
@@ -33,4 +34,11 @@ function nextMove() {
 
 # starting the game
 currPosition=$START_POSITION
-currPosition=$( nextMove $( diceRoll ) )
+while [ $currPosition -lt $WIN_POSITION ]
+do 
+	currPosition=$( nextMove $( diceRoll ) )
+	if [ $currPosition -lt $START_POSITION ]
+	then
+		currPosition=$START_POSITION
+	fi
+done
