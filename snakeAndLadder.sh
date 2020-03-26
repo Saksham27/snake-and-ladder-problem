@@ -69,19 +69,31 @@ function getPosition() {
 
 }
 
+# function of one move from player one
+# param1 : current position of player 1
+function playerOneMove() {
+	currPosition1=$( getPosition $1 )
+	playerPosition1[$arrLength1]=$currPosition1 # storing player position after evry die roll
+	((arrLength1++))
+}
+
+# function of one move from player two
+# param1 : current position of player 2
+function playerTwoMove() {
+	currPosition2=$( getPosition $1 )
+	playerPosition2[$arrLength2]=$currPosition2 # storing player position after evry die roll
+	((arrLength2++))
+}
+
 # starting the game
 currPosition1=$START_POSITION # player 1
 currPosition2=$START_POSITION # player 2
 
 while [ $INFINITE_LOOP ]
-do 
-	currPosition1=$( getPosition $currPosition1 )
-	currPosition2=$( getPosition $currPosition2 )
+do
 
-	playerPosition1[$arrLength1]=$currPosition1 # storing player 1 position after evry die roll
-	((arrLength1++))
-	playerPosition2[$arrLength2]=$currPosition2 # storing player 2  position after evry die roll
-	((arrLength2++))
+	playerOneMove $currPosition1
+	playerTwoMove $currPosition2
 
 	if [ $currPosition1 -eq $WIN_POSITION ]
 	then
